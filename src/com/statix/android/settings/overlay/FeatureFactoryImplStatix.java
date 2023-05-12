@@ -4,9 +4,11 @@ import android.content.Context;
 
 import com.android.settings.accounts.AccountFeatureProvider;
 import com.android.settings.fuelgauge.BatteryStatusFeatureProvider;
+import com.android.settings.fuelgauge.PowerUsageFeatureProvider;
 import com.android.settings.overlay.FeatureFactoryImpl;
 
 import com.google.android.settings.accounts.AccountFeatureProviderGoogleImpl;
+import com.google.android.settings.fuelgauge.PowerUsageFeatureProviderGoogleImpl;
 
 import com.statix.android.settings.fuelgauge.BatteryStatusFeatureProviderStatixImpl;
 
@@ -14,6 +16,7 @@ public final class FeatureFactoryImplStatix extends FeatureFactoryImpl {
 
     private AccountFeatureProvider mAccountFeatureProvider;
     private BatteryStatusFeatureProvider mBatteryStatusFeatureProvider;
+    private PowerUsageFeatureProvider mPowerUsageFeatureProvider;
 
     @Override
     public AccountFeatureProvider getAccountFeatureProvider() {
@@ -29,6 +32,15 @@ public final class FeatureFactoryImplStatix extends FeatureFactoryImpl {
             mBatteryStatusFeatureProvider = new BatteryStatusFeatureProviderStatixImpl(context);
         }
         return mBatteryStatusFeatureProvider;
+    }
+
+    @Override
+    public PowerUsageFeatureProvider getPowerUsageFeatureProvider(Context context) {
+        if (mPowerUsageFeatureProvider == null) {
+            mPowerUsageFeatureProvider = new PowerUsageFeatureProviderGoogleImpl(
+                    context.getApplicationContext());
+        }
+        return mPowerUsageFeatureProvider;
     }
 
 }

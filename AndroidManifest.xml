@@ -22,6 +22,8 @@
         coreApp="true"
         android:sharedUserId="android.uid.system">
 
+    <uses-permission android:name="com.google.android.settings.intelligence.BATTERY_DATA"/>
+
     <application android:label="@string/settings_label"
             android:icon="@drawable/ic_launcher_settings"
             android:theme="@style/Theme.Settings"
@@ -69,19 +71,26 @@
             </intent-filter>
         </activity>
 
-	<!-- Phone and bluetooth device battery data -->
-	<service android:name="com.statix.android.settings.fuelgauge.batterydata.BatteryDataFetchService"
-		 android:permission="android.permission.BIND_JOB_SERVICE"
-		 android:exported="false"
-		 android:process=":usage_data_loader"/>
+	      <!-- PowerUsage -->
+	      <provider android:name="com.google.android.settings.fuelgauge.BatteryUsageContentProvider"
+                  android:permission="com.google.android.settings.intelligence.BATTERY_DATA"
+                  android:exported="true"
+                  android:multiprocess="false"
+                  android:authorities="com.google.android.settings.fuelgauge.provider"/>
 
-	<receiver android:name="com.statix.android.settings.fuelgauge.batterydata.BatteryDataBroadcastReceiver"
-		  android:exported="true">
-	    <intent-filter>
-	        <action android:name="settings.intelligence.battery.action.FETCH_BATTERY_USAGE_DATA"/>
-	        <action android:name="settings.intelligence.battery.action.FETCH_BLUETOOTH_BATTERY_DATA"/>
-	    </intent-filter>
-	</receiver>
+	      <service android:name="com.google.android.settings.fuelgauge.BatteryUsageLoaderService"
+		             android:permission="android.permission.BIND_JOB_SERVICE"
+		             android:exported="false"
+		             android:process=":usage_data_loader"/>
+
+	      <receiver android:name="com.google.android.settings.fuelgauge.BatteryBroadcastReceiver"
+		              android:exported="true">
+	          <intent-filter>
+	              <action android:name="settings.intelligence.battery.action.FETCH_BATTERY_USAGE_DATA"/>
+	              <action android:name="settings.intelligence.battery.action.FETCH_BLUETOOTH_BATTERY_DATA"/>
+	              <action android:name="settings.intelligence.battery.action.CLEAR_BATTERY_CACHE_DATA"/>
+	          </intent-filter>
+	      </receiver>
 
     </application>
 </manifest>
